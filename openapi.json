@@ -1,0 +1,566 @@
+{
+  "info": {
+    "description": "Complete Kubernetes management via kubectl, helm, istioctl, and argocd",
+    "title": "Kubernetes Management Tools",
+    "version": "1.0.0"
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/exec_pod": {
+      "post": {
+        "description": "Execute a command inside a pod container",
+        "operationId": "exec_pod",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "command": {
+                    "description": "Command to execute",
+                    "type": "string"
+                  },
+                  "container": {
+                    "description": "Container name (optional)",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Pod name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "command"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Command output"
+          }
+        },
+        "summary": "Execute Command in Pod",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "operationId": "health_check",
+        "responses": {
+          "200": {
+            "description": "Service is healthy"
+          }
+        },
+        "summary": "Health check"
+      }
+    },
+    "/helm_install": {
+      "post": {
+        "description": "Install a Helm chart",
+        "operationId": "helm_install",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "chart": {
+                    "description": "Chart name",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Release name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  },
+                  "repo": {
+                    "description": "Helm repository URL",
+                    "type": "string"
+                  },
+                  "values": {
+                    "description": "Chart values",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name",
+                  "chart",
+                  "namespace"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Installation result"
+          }
+        },
+        "summary": "Install Helm Chart",
+        "tags": [
+          "helm"
+        ]
+      }
+    },
+    "/helm_uninstall": {
+      "post": {
+        "description": "Uninstall a Helm release",
+        "operationId": "helm_uninstall",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Release name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "namespace"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Uninstall result"
+          }
+        },
+        "summary": "Uninstall Helm Release",
+        "tags": [
+          "helm"
+        ]
+      }
+    },
+    "/helm_upgrade": {
+      "post": {
+        "description": "Upgrade an existing Helm release",
+        "operationId": "helm_upgrade",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "chart": {
+                    "description": "Chart name",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Release name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  },
+                  "values": {
+                    "description": "Chart values",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "name",
+                  "chart",
+                  "namespace"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Upgrade result"
+          }
+        },
+        "summary": "Upgrade Helm Release",
+        "tags": [
+          "helm"
+        ]
+      }
+    },
+    "/kubectl_apply": {
+      "post": {
+        "description": "Apply YAML manifests to create or update resources",
+        "operationId": "kubectl_apply",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "dryRun": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "manifest": {
+                    "description": "YAML manifest content",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  }
+                },
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Apply result"
+          }
+        },
+        "summary": "Apply Kubernetes Manifests",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    },
+    "/kubectl_delete": {
+      "post": {
+        "description": "Delete Kubernetes resources",
+        "operationId": "kubectl_delete",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "force": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "description": "Resource name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "description": "Resource type",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "resourceType",
+                  "name"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Delete result"
+          }
+        },
+        "summary": "Delete Kubernetes Resources",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    },
+    "/kubectl_describe": {
+      "post": {
+        "description": "Get detailed information about Kubernetes resources",
+        "operationId": "kubectl_describe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Resource name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "description": "Resource type",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "resourceType",
+                  "name"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Detailed resource information"
+          }
+        },
+        "summary": "Describe Kubernetes Resources",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    },
+    "/kubectl_get": {
+      "post": {
+        "description": "List or get Kubernetes resources (pods, services, deployments, etc.)",
+        "operationId": "kubectl_get",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "allNamespaces": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "fieldSelector": {
+                    "description": "Field selector",
+                    "type": "string"
+                  },
+                  "labelSelector": {
+                    "description": "Label selector",
+                    "type": "string"
+                  },
+                  "name": {
+                    "description": "Resource name (optional)",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "description": "Namespace",
+                    "type": "string"
+                  },
+                  "output": {
+                    "default": "json",
+                    "enum": [
+                      "json",
+                      "yaml",
+                      "wide",
+                      "name"
+                    ],
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "description": "Resource type (pods, services, deployments, etc.)",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "resourceType"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Resource information"
+          }
+        },
+        "summary": "Get Kubernetes Resources",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    },
+    "/kubectl_logs": {
+      "post": {
+        "description": "Retrieve logs from pods or deployments",
+        "operationId": "kubectl_logs",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "container": {
+                    "description": "Container name (optional)",
+                    "type": "string"
+                  },
+                  "follow": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "name": {
+                    "description": "Resource name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "default": "pod",
+                    "enum": [
+                      "pod",
+                      "deployment"
+                    ],
+                    "type": "string"
+                  },
+                  "tail": {
+                    "description": "Number of lines to show",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "name",
+                  "namespace"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Log output"
+          }
+        },
+        "summary": "Get Pod Logs",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    },
+    "/kubectl_scale": {
+      "post": {
+        "description": "Scale deployments, statefulsets, or replicasets",
+        "operationId": "kubectl_scale",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "name": {
+                    "description": "Resource name",
+                    "type": "string"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  },
+                  "replicas": {
+                    "description": "Number of replicas",
+                    "type": "number"
+                  },
+                  "resourceType": {
+                    "default": "deployment",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "replicas"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Scale result"
+          }
+        },
+        "summary": "Scale Kubernetes Resources",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    },
+    "/port_forward": {
+      "post": {
+        "description": "Forward a local port to a pod or service",
+        "operationId": "port_forward",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "localPort": {
+                    "description": "Local port",
+                    "type": "number"
+                  },
+                  "namespace": {
+                    "default": "default",
+                    "type": "string"
+                  },
+                  "resourceName": {
+                    "description": "Resource name",
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "description": "Resource type (pod/service)",
+                    "type": "string"
+                  },
+                  "targetPort": {
+                    "description": "Target port",
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "resourceType",
+                  "resourceName",
+                  "localPort",
+                  "targetPort"
+                ],
+                "type": "object"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Port forward result"
+          }
+        },
+        "summary": "Port Forward",
+        "tags": [
+          "kubectl"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "description": "Kubernetes Tools",
+      "url": "/"
+    }
+  ]
+}

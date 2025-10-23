@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "k8s-mcp": {
+      "command": "python",
+      "args": ["/app/mcp_stdio_server.py"],
+      "env": {
+        "KUBECONFIG": "/app/.kube/config"
+      }
+    }
+  }
+}
