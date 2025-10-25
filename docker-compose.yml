@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   ollama:
     container_name: ollama
@@ -19,6 +17,11 @@ services:
       timeout: 10s
       retries: 5
       start_period: 60s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
     # For GPU support, uncomment the following lines and ensure your system has NVIDIA drivers and Docker configured for GPU access
     # deploy:
     #   resources:
@@ -63,6 +66,11 @@ services:
     networks:
       - mcp-lab-network
     restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   k8s-mcp-server-backend:
     image: ghcr.io/alexei-led/k8s-mcp-server:latest
@@ -77,6 +85,11 @@ services:
       - K8S_MCP_TRANSPORT=sse
       - K8S_MCP_SECURITY_MODE=permissive
       - K8S_MCP_TIMEOUT=600
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
   mcpo:
     build:
@@ -99,6 +112,11 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 
 

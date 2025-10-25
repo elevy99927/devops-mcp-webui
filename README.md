@@ -1,5 +1,15 @@
 # Open WebUI Kubernetes Integration
 
+[![Docker Compose](https://img.shields.io/badge/docker--compose-ready-blue.svg)](https://docs.docker.com/compose/)
+[![Kubernetes](https://img.shields.io/badge/kubernetes-compatible-326ce5.svg)](https://kubernetes.io/)
+[![Open WebUI](https://img.shields.io/badge/Open%20WebUI-latest-green.svg)](https://github.com/open-webui/open-webui)
+[![Ollama](https://img.shields.io/badge/Ollama-supported-orange.svg)](https://ollama.ai/)
+[![MCP Protocol](https://img.shields.io/badge/MCP-protocol-purple.svg)](https://www.anthropic.com/news/introducing-mcp)
+[![Kind](https://img.shields.io/badge/Kind-local%20k8s-ff6b6b.svg)](https://kind.sigs.k8s.io/)
+[![Helm](https://img.shields.io/badge/Helm-package%20manager-0f1689.svg)](https://helm.sh/)
+[![kubectl](https://img.shields.io/badge/kubectl-CLI-326ce5.svg)](https://kubernetes.io/docs/reference/kubectl/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## TL;DR
 
 **Chat with your Kubernetes cluster using natural language!**
