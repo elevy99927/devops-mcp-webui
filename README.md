@@ -12,9 +12,16 @@
 
 ## TL;DR
 
-**Chat with your Kubernetes cluster using natural language!**
+**Making Kubernetes speak your language!**
 
-This project connects OpenWebUI to Kubernetes, letting you manage your cluster through conversational AI. Ask questions like "What pods are running?" or "Scale my deployment to 5 replicas" and get instant results.
+Empowering **non-technical teams** (Product managers, Operations) to interact with Kubernetes clusters without relying on DevOps teams. No more black terminals or YAML files - just natural conversation.
+
+Ask questions like:
+- "What's the status of the payment service?"
+- "Scale the backend to 5 replicas"
+- "Why is the frontend slow today?"
+
+And get instant results through conversational AI.
 
 ---
 
@@ -156,10 +163,12 @@ Install Jenkins using Helm in the jenkins namespace
 **Then open http://localhost:3000 and start chatting with your cluster!**
 
 **Example queries:**
-- "What pods are running in kube-system?"
-- "Show me all services in default namespace" 
-- "Create a new namespace called production"
-- "Install Jenkins using Helm in the jenkins namespace"
+- "What's the status of the payment service?"
+- "Scale the backend to 5 replicas"
+- "Why is the frontend application slow?"
+- "Install monitoring tools in the production namespace"
+- "Show me all failed deployments"
+- "Create a new environment for staging"
 
 ---
 

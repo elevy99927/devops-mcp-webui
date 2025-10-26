@@ -73,12 +73,12 @@ services:
         max-file: "3"
 
 
-  mcpo:
+  mcp-server:
     build:
-      context: ./mcp-bridge
-    container_name: mcpo
+      context: ./mcp-servers/k8s-mcp
+    container_name: mcp-server
     ports:
-      - "9000:9000"
+      - "8080:8080"
     networks:
       - mcp-lab-network
       - kind
@@ -87,6 +87,28 @@ services:
       - ./kube:/root/.kube:ro
     environment:
       - KUBECONFIG=/root/.kube/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  mcpo:
+    build:
+      context: ./mcp-bridge
+    container_name: mcpo
+    ports:
+      - "9000:9000"
+    networks:
+      - mcp-lab-network
+    restart: unless-stopped
+    depends_on:
+      - mcp-server
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:9000/health"]
       interval: 30s

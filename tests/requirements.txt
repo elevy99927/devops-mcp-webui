@@ -1,0 +1,4 @@
+# Optional dependencies for Python test scripts
+# The test scripts work with built-in modules, but requests provides better error handling
+
+requests>=2.25.0
