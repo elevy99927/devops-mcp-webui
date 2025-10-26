@@ -58,7 +58,7 @@ fi
 
 # Remove specific containers if they exist
 echo "Removing containers..."
-containers=("open-webui" "mcpo" "k8s-mcp-server-backend" "ollama")
+containers=("open-webui" "mcpo" "ollama")
 for container in "${containers[@]}"; do
   if docker ps -a --format "table {{.Names}}" | grep -q "^${container}$"; then
     docker rm -f "$container"

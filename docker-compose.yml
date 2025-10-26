@@ -72,24 +72,6 @@ services:
         max-size: "10m"
         max-file: "3"
 
-  k8s-mcp-server-backend:
-    image: ghcr.io/alexei-led/k8s-mcp-server:latest
-    container_name: k8s-mcp-server-backend
-    networks:
-      - mcp-lab-network
-    restart: unless-stopped
-    volumes:
-      - ./kube:/home/appuser/.kube:ro
-    environment:
-      - KUBECONFIG=/home/appuser/.kube/config
-      - K8S_MCP_TRANSPORT=sse
-      - K8S_MCP_SECURITY_MODE=permissive
-      - K8S_MCP_TIMEOUT=600
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "10m"
-        max-file: "3"
 
   mcpo:
     build:
@@ -101,8 +83,6 @@ services:
       - mcp-lab-network
       - kind
     restart: unless-stopped
-    depends_on:
-      - k8s-mcp-server-backend
     volumes:
       - ./kube:/root/.kube:ro
     environment:

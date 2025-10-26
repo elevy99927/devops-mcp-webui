@@ -213,4 +213,4 @@ __marimo__/
 open-webui/*
 ollama/*
 logs/*
-
+.cluster-type
