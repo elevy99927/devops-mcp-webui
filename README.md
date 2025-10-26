@@ -37,9 +37,8 @@ This project connects OpenWebUI to Kubernetes, letting you manage your cluster t
 - [Components](#components)
   - [1. Open WebUI](#1-open-webui)
   - [2. Ollama](#2-ollama)
-  - [3. MCPO (MCP Bridge)](#3-mcpo-mcp-bridge)
-  - [4. k8s-mcp-server-backend](#4-k8s-mcp-server-backend)
-  - [5. Kubernetes Cluster](#5-kubernetes-cluster)
+  - [3. MCP-Bridge](#3-mcpo-mcp-bridge)
+  - [4. Kubernetes Cluster](#4-kubernetes-cluster)
 - [Usage](#usage)
 
 ---
@@ -56,7 +55,6 @@ This project connects OpenWebUI to Kubernetes, letting you manage your cluster t
 - Kind (Kubernetes in Docker)
 - Open Web UI
 - Ollama
-- k8s mcp Server
 - MCP bridge 
 
 **After successful installation, you'll see:**
@@ -174,25 +172,22 @@ This project integrates Open WebUI with Kubernetes management capabilities throu
 
 ```mermaid
 graph TB
-    subgraph "User Interface"
-        User[User]
-    end
-    
-    subgraph "AI & Chat Layer"
-        OpenWebUI[Open WebUI<br/>Port: 3000]
-        Ollama[Ollama<br/>LLM Server<br/>Port: 11434]
-    end
-    
+
     subgraph "External AI Services"
         Gemini[Google Gemini<br/>External API]
     end
     
-    subgraph "Bridge Layer"
-        MCPO[MCPO<br/>OpenAPI Bridge<br/>Port: 9000]
+    subgraph "User Interface"
+        User[User]
     end
     
-    subgraph "MCP Server Layer"
-        K8sMCP[k8s-mcp-server-backend<br/>MCP Protocol Server<br/>Port: 8000]
+    subgraph "UI Layer"
+        OpenWebUI[Open WebUI<br/>Port: 3000]
+        Ollama[Ollama<br/>LLM Server<br/>Port: 11434]
+    end
+    
+    subgraph "Bridge Layer"
+        MCP-Bridge[MCP-Bridge<br/>OpenAPI Bridge<br/>Port: 9000]
     end
     
     subgraph "Target Infrastructure"
@@ -202,6 +197,8 @@ graph TB
     subgraph "Configuration"
         KubeConfig[kubeconfig<br/>./kube/config]
     end
+    
+
 
     %% User interactions
     User -->|Chat & Commands| OpenWebUI
@@ -209,18 +206,15 @@ graph TB
     %% AI Layer connections
     OpenWebUI -->|LLM Requests| Ollama
     OpenWebUI -.->|External API Calls| Gemini
-    OpenWebUI -->|Tool Calls<br/>OpenAPI/REST| MCPO
+    OpenWebUI -->|Tool Calls<br/>OpenAPI/REST| MCP-Bridge
     
-    %% Bridge Layer
-    MCPO -->|MCP Protocol<br/>SSE Transport| K8sMCP
-    
-    %% MCP to Kubernetes
-    K8sMCP -->|kubectl commands| K8s
-    K8sMCP -->|helm operations| K8s
-    K8sMCP -->|istioctl commands| K8s
+    %% Bridge Layer to Kubernetes
+    MCP-Bridge -->|kubectl commands| K8s
+    MCP-Bridge -->|helm operations| K8s
+    MCP-Bridge -->|istioctl commands| K8s
     
     %% Configuration
-    KubeConfig -.->|Mounted Volume| K8sMCP
+    KubeConfig -.->|Mounted Volume| MCP-Bridge
     
     %% Styling
     classDef userLayer fill:#e1f5fe
@@ -234,8 +228,7 @@ graph TB
     class User userLayer
     class OpenWebUI,Ollama aiLayer
     class Gemini,OpenAI,Anthropic externalLayer
-    class MCPO bridgeLayer
-    class K8sMCP mcpLayer
+    class MCP-Bridge bridgeLayer
     class K8s k8sLayer
     class KubeConfig configLayer
 ```
@@ -249,8 +242,7 @@ graph TB
 3. **Tool Selection**: Open WebUI identifies the appropriate kubectl_get tool
 4. **API Call**: Open WebUI makes REST API call to MCPO bridge
 5. **Protocol Translation**: MCPO translates REST call to MCP protocol
-6. **Command Execution**: k8s-mcp-server-backend executes kubectl command
-7. **Response Chain**: Results flow back through the same chain to the user
+6. **Response Chain**: Results flow back through the same chain to the user
 
 ### Network Architecture
 
@@ -264,7 +256,7 @@ graph LR
         subgraph "Internal Services"
             OW[open-webui:8080]
             MC[mcpo:9000]
-            K8S[k8s-mcp-server-backend:8000]
+            K8S[Kubernetes:6443]
             OL[ollama:11434]
         end
     end
@@ -286,7 +278,6 @@ openwebui-k8s-bridge/
 ├── tests/               # Test scripts and examples
 ├── docs/                # Documentation
 ├── kube/               # Kubernetes configuration
-├── k8s-mcp-server/     # MCP server implementation
 ├── docker-compose.yml  # Complete stack setup
 └── README.md           # Main documentation
 ```
@@ -311,7 +302,7 @@ openwebui-k8s-bridge/
   - Function calling capabilities
   - Integration with Open WebUI
 
-### 3. **MCPO (MCP Bridge)**
+### 3. **MCP Bridge**
 - **Purpose**: Protocol bridge between OpenAPI and MCP
 - **Port**: 9000
 - **Role**: Translates REST API calls from Open WebUI into MCP protocol calls
@@ -320,17 +311,7 @@ openwebui-k8s-bridge/
   - REST to MCP protocol translation
   - Tool parameter validation and formatting
 
-### 4. **k8s-mcp-server-backend**
-- **Purpose**: MCP server for Kubernetes operations
-- **Port**: 8000 (internal)
-- **Role**: Executes actual Kubernetes commands via kubectl, helm, and istioctl
-- **Key Features**:
-  - Multiple CLI tool support (kubectl, helm, istioctl, argocd)
-  - MCP protocol implementation
-  - Security modes and command validation
-  - Cloud provider support (AWS EKS, GKE, AKS)
-
-### 5. **Kubernetes Cluster**
+### 4 **Kubernetes Cluster**
 - **Purpose**: Target infrastructure for management operations
 - **Role**: The actual Kubernetes cluster being managed
 - **Access**: Through kubeconfig mounted as volume
@@ -344,8 +325,12 @@ Once configured, you can ask natural language questions about your Kubernetes cl
 - "List all deployments across all namespaces"
 - "Get the logs from the nginx pod"
 - install argocd using helm from repo https://argoproj.github.io/argo-helm
+---
 <img src="./images/kubectl_pods_query_01.png">
+---
 <img src="./images/helm_install_argo.png">
+---
+<img src="./images/open-webui-install-argocd.png">
 
 
 The AI will automatically use the appropriate Kubernetes tools to execute commands and provide formatted responses.
